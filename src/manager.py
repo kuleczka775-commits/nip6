@@ -71,4 +71,25 @@ class Manager:
             )
         for tenant in tenants_in_apartment ] 
     
+    def get_debtors(self, apartment_key: str, year: int, month: int):
+        debtors = []
+        deposits_to_pay = 0
+        for tenant in self.tenants.values():
+            deposits_to_pay += tenant.deposit_pln
+        total_cost = 0
+        for bill in self.bills:
+            if bill.apartment == apartment_key and (year is None or bill.settlement_year == year) and (month is None or bill.settlement_month == month):
+                total_cost += bill.amount_pln
+        return True
+    
+    def check_deposits(self):
+        deposits_to_pay = 0
+        for tenant in self.tenants.values():
+            deposits_to_pay += tenant.deposit_pln
+        deposits_paid = 0
+        for bill in self.bills:
+            if bill.type == 'deposit':
+                deposits_paid += bill.amount_pln 
+        deposits_state = deposits_to_pay - deposits_paid
+        return deposits_state
     
